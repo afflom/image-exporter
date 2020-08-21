@@ -24,19 +24,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: build-rhel
+      - name: package
         run: |
-            export DOCKER_BUILDKIT=1
-            mkdir images
+            cd workdir
+            mkdir payload/images
             for c in $(cat image.list); do docker pull $c && \
-             docker save $_ > images/$(date +%s).tar; \
+             docker save $_ > workdir/payload/images/$(date +%s).tar; \
             done
-            docker build -o image-export .
+            bash build
+
       - name: upload-image-export
         uses: actions/upload-artifact@v1
         with:
           name: image-export
-          path: image-export/selfextract.bsx
+          path: selfextract.bsx
   # Push image to GitHub Packages.
   # See also https://docs.docker.com/docker-hub/builds/
 #  push:
