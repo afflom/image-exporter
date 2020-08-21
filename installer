@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Get reference directory
+directory=$(pwd)
+
+# Load container images
+for f in $directory/images/*; do docker load -i $f; done
+

@@ -1,0 +1,56 @@
+name: Development
+
+on:
+  push:
+    # Publish `master` as Docker `latest` image.
+    branches:
+      - master
+
+    # Publish `v1.2.3` tags as releases.
+    tags:
+      - v*
+
+  # Run tests for any PRs.
+  pull_request:
+
+env:
+  # TODO: Change variable to your image's name.
+  IMAGE_NAME: image
+
+jobs:
+  # Run tests.
+  # See also https://docs.docker.com/docker-hub/builds/automated-testing/
+  build-rhel:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: build-rhel
+        run: |
+            export DOCKER_BUILDKIT=1
+            mkdir images
+            for c in $(cat image.list); do docker pull $c && \
+             docker save $_ > images/$(date +%s).tar; \
+            done
+            docker build -o image-export .
+      - name: upload-image-export
+        uses: actions/upload-artifact@v1
+        with:
+          name: image-export
+          path: image-export/selfextract.bsx
+  # Push image to GitHub Packages.
+  # See also https://docs.docker.com/docker-hub/builds/
+#  push:
+#    # Ensure test job passes before pushing image.
+#    needs: 
+#    - test-rhel
+#    - test-deb
+
+#    runs-on: ubuntu-latest
+#    if: github.event_name == 'push'
+
+#    steps:
+#      - uses: actions/checkout@v2
+
+#      - name: Build image
+        
+#        run: docker build . --file Dockerfile --tag image
