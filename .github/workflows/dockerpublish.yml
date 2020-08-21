@@ -37,7 +37,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: image-bundle
-          path: selfextract.bsx
+          path: workdir/selfextract.bsx
   # Push image to GitHub Packages.
   # See also https://docs.docker.com/docker-hub/builds/
 #  push:
