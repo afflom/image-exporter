@@ -29,14 +29,14 @@ jobs:
             cd workdir
             mkdir payload/images
             for c in $(cat image.list); do docker pull $c && \
-             docker save $_ > workdir/payload/images/$(date +%s).tar; \
+             docker save $_ > payload/images/$(date +%s).tar; \
             done
             bash build
 
-      - name: upload-image-export
+      - name: upload-image-bundle
         uses: actions/upload-artifact@v1
         with:
-          name: image-export
+          name: image-bundle
           path: selfextract.bsx
   # Push image to GitHub Packages.
   # See also https://docs.docker.com/docker-hub/builds/
